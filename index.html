@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
@@ -54,28 +53,29 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* Müzik Çalar */
+    /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
-      bottom: 10px;
+      bottom: 60px; /* daha yukarı alındı */
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.9);
-      padding: 10px 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.25);
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 14px;
+      gap: 16px;
+      font-size: 16px;
       display: none;
+      z-index: 9999;
     }
     .music-player button {
       border: none;
-      padding: 8px 12px;
-      border-radius: 6px;
+      padding: 12px 16px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 18px;
       transition: 0.3s;
       background: #ff4081;
       color: white;
@@ -86,17 +86,39 @@
     .music-info {
       display: flex;
       align-items: center;
-      gap: 10px;
-      min-width: 160px;
+      gap: 12px;
+      min-width: 180px;
     }
     .music-info img {
-      width: 40px;
-      height: 40px;
-      border-radius: 6px;
+      width: 55px;
+      height: 55px;
+      border-radius: 8px;
     }
     .music-info span {
       font-weight: bold;
       color: #333;
+      font-size: 16px;
+    }
+
+    /* 📱 Telefon uyumluluğu */
+    @media (max-width: 600px) {
+      .music-player {
+        bottom: 40px;
+        padding: 12px 18px;
+        gap: 12px;
+        font-size: 14px;
+      }
+      .music-player button {
+        padding: 10px 14px;
+        font-size: 16px;
+      }
+      .music-info img {
+        width: 45px;
+        height: 45px;
+      }
+      .music-info span {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -141,7 +163,6 @@
     let volumeLevel = 1;
     let noteShown = false;
 
-    // Ses kademeleri
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
     const message = "pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yete sahip oldun be yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verrsin umarım yani,uzun lafın kısası bana verdiğin ve kattığın herşey için teşekkür ederim yani doğum günün kutlu olsun nice bizli senelere inşallah  🎉🎂💖 16.06.2008";
@@ -161,7 +182,6 @@
       typeWriter(message, noteBox);
     }
 
-    // Yazma efekti
     function typeWriter(text, element) {
       element.innerHTML = "";
       let i = 0;
@@ -172,12 +192,11 @@
       }, 50);
     }
 
-    // Müzik Kontrolleri
     function playSong() {
       audio.src = songs[currentSong].url;
       songName.textContent = songs[currentSong].name;
       coverArt.src = songs[currentSong].cover;
-      audio.volume = volumeSteps[0]; // başlangıç sesi 0.2
+      audio.volume = volumeSteps[0];
       audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
     }
     function togglePlay() {
@@ -192,24 +211,20 @@
       playSong();
     }
 
-    // Ses kontrol (4 kademe)
     function cycleVolume() {
       volumeLevel++;
       if (volumeLevel > 4) volumeLevel = 1;
-
       audio.volume = volumeSteps[volumeLevel - 1];
-
       if (volumeLevel === 1) {
-        volumeBtn.textContent = "🔊 ▁";   // %20
+        volumeBtn.textContent = "🔊 ▁";
       } else if (volumeLevel === 2) {
-        volumeBtn.textContent = "🔊 ▁▃"; // %40
+        volumeBtn.textContent = "🔊 ▁▃";
       } else if (volumeLevel === 3) {
-        volumeBtn.textContent = "🔊 ▁▃▆"; // %70
+        volumeBtn.textContent = "🔊 ▁▃▆";
       } else if (volumeLevel === 4) {
-        volumeBtn.textContent = "🔊 ▁▃▆█"; // %100
+        volumeBtn.textContent = "🔊 ▁▃▆█";
       }
     }
   </script>
 </body>
 </html>
-
