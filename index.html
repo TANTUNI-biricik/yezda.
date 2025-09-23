@@ -53,23 +53,26 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
-    /* 🎶 Müzik Çalar */
-    .music-player {
-      position: fixed;
-      bottom: 100px; /* daha yukarı alındı */
-      left: 0%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.95);
-      padding: 15px 25px;
-      border-radius: 15px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      font-size: 16px;
-      display: none;
-      z-index: 9999;
-    }
+/* 🎶 Müzik Çalar */
+.music-player {
+  position: fixed;
+  top: 20px;                 /* yukarı sabit */
+  left: 0;                   /* sola yapış */
+  right: 0;                  /* sağa yapış */
+  width: 100%;               /* tam genişlik */
+  height: 60px;              /* yüksekliği sabit tut, ayarlayabilirsin */
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0 25px;           /* yukarı-aşağı boşluğu kaldırdım, yanlarda bıraktım */
+  border-radius: 0;          /* köşeleri düz, bar gibi */
+  box-shadow: 0 0 12px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* içerikler sağ-sol */
+  gap: 16px;
+  font-size: 16px;
+  display: none;
+  z-index: 9999;
+}
     .music-player button {
       border: none;
       padding: 12px 16px;
@@ -228,5 +231,6 @@
   </script>
 </body>
 </html>
+
 
 
