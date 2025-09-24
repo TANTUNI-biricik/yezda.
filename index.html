@@ -10,6 +10,19 @@
       overflow: hidden;
       transition: background 1s;
     }
+
+    /* Zarf açıldıktan sonraki özel görünüm */
+    body.opened {
+      background: linear-gradient(135deg, #d8c7ff, #f3e7ff, #d1f3ff);
+      animation: dreamy 8s infinite alternate;
+    }
+
+    @keyframes dreamy {
+      0%   { background: linear-gradient(135deg, #d8c7ff, #f3e7ff, #d1f3ff); }
+      50%  { background: linear-gradient(135deg, #c4e0ff, #e6d4ff, #ffe6f9); }
+      100% { background: linear-gradient(135deg, #f3e7ff, #d1f3ff, #c7ffe2); }
+    }
+
     .cake {
       font-size: 120px;
       margin-top: 150px;
@@ -46,11 +59,16 @@
       font-size: 18px;
       text-align: left;
       line-height: 1.5;
-      animation: slideUp 1s forwards;
+      animation: slideUp 1s forwards, glow 2s infinite alternate;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 10px rgba(255, 100, 200, 0.3); }
+      to   { box-shadow: 0 0 25px rgba(150, 100, 255, 0.6); }
     }
 
     /* 🎶 Müzik Çalar */
@@ -169,7 +187,7 @@
     const message = "pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yete sahip oldun be yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verrsin umarım yani,uzun lafın kısası bana verdiğin ve kattığın herşey için teşekkür ederim yani doğum günün kutlu olsun nice bizli senelere inşallah  🎉🎂💖 16.06.2008";
 
     function startParty() {
-      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
+      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)"; // pembe degrade
       document.querySelector(".cake").style.display = "none";
       document.getElementById("envelope").style.display = "block";
       document.getElementById("player").style.display = "flex";
@@ -180,6 +198,7 @@
       if (noteShown) return;
       noteShown = true;
       noteBox.style.display = "block";
+      document.body.classList.add("opened"); // Arka planı değiştir
       typeWriter(message, noteBox);
     }
 
@@ -229,13 +248,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
