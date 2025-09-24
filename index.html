@@ -5,24 +5,23 @@
   <style>
     body {
       text-align: center;
-      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      background: #fff5f7;
       font-family: Arial, sans-serif;
       overflow: hidden;
       transition: background 1s;
     }
-
     .cake {
       font-size: 120px;
       margin-top: 150px;
       cursor: pointer;
       animation: float 3s ease-in-out infinite;
     }
-
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-20px); }
     }
 
+    /* Zarf */
     .envelope {
       font-size: 100px;
       cursor: pointer;
@@ -30,19 +29,17 @@
       margin-top: 50px;
       animation: bounce 2s infinite;
     }
-
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-15px); }
     }
 
+    /* Mesaj Kutusu */
     .note {
       display: none;
       margin: 20px auto;
       padding: 20px;
       max-width: 500px;
-      max-height: 60vh;
-      overflow-y: auto;
       background: white;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -51,15 +48,15 @@
       line-height: 1.5;
       animation: slideUp 1s forwards;
     }
-
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
 
+    /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
-      bottom: 100px;
+      bottom: 100px; /* daha yukarı alındı */
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.95);
@@ -73,8 +70,8 @@
       display: none;
       z-index: 9999;
     }
-
-    .music-player button {
+    
+ .music-player button {
       border: none;
       padding: 12px 16px;
       border-radius: 8px;
@@ -84,30 +81,27 @@
       background: #ff4081;
       color: white;
     }
-
     .music-player button:hover {
       background: #e73370;
     }
-
     .music-info {
       display: flex;
       align-items: center;
       gap: 12px;
       min-width: 180px;
     }
-
     .music-info img {
       width: 55px;
       height: 55px;
       border-radius: 8px;
     }
-
     .music-info span {
       font-weight: bold;
       color: #333;
       font-size: 16px;
     }
 
+    /* 📱 Telefon uyumluluğu */
     @media (max-width: 600px) {
       .music-player {
         bottom: 40px;
@@ -130,10 +124,19 @@
   </style>
 </head>
 <body>
+  <!-- İlk sadece pasta -->
   <div class="cake" onclick="startParty()">🎂</div>
+
+  <!-- Zarf -->
   <div class="envelope" id="envelope" onclick="showNote()">✉️</div>
+
+  <!-- Mesaj -->
   <div class="note" id="note"></div>
+
+  <!-- Müzik -->
   <audio id="bgMusic" loop></audio>
+
+  <!-- Müzik Çalar -->
   <div class="music-player" id="player">
     <div class="music-info">
       <img id="coverArt" src="" alt="Kapak">
@@ -160,11 +163,13 @@
     let currentSong = 0;
     let volumeLevel = 1;
     let noteShown = false;
+
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
-    const message = `pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yete sahip oldun be yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verrsin umarım yani,uzun lafın kısası bana verdiğin ve kattığın herşey için teşekkür ederim yani doğum günün kutlu olsun nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
+    const message = "pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun be yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verrsin umarım yani,uzun lafın kısası bana verdiğin ve kattığın herşey için teşekkür ederim yani doğum günün kutlu olsun nice bizli senelere inşallah  🎉🎂💖 16.06.2008";
 
     function startParty() {
+      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
       document.querySelector(".cake").style.display = "none";
       document.getElementById("envelope").style.display = "block";
       document.getElementById("player").style.display = "flex";
@@ -195,16 +200,13 @@
       audio.volume = volumeSteps[0];
       audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
     }
-
     function togglePlay() {
-      if (audio.paused) audio.play(); else audio.pause();
+      if (audio.paused) { audio.play(); } else { audio.pause(); }
     }
-
     function nextSong() {
       currentSong = (currentSong + 1) % songs.length;
       playSong();
     }
-
     function prevSong() {
       currentSong = (currentSong - 1 + songs.length) % songs.length;
       playSong();
@@ -214,7 +216,15 @@
       volumeLevel++;
       if (volumeLevel > 4) volumeLevel = 1;
       audio.volume = volumeSteps[volumeLevel - 1];
-      volumeBtn.textContent = ["🔊 ▁","🔊 ▁▃","🔊 ▁▃▆","🔊 ▁▃▆█"][volumeLevel-1];
+      if (volumeLevel === 1) {
+        volumeBtn.textContent = "🔊 ▁";
+      } else if (volumeLevel === 2) {
+        volumeBtn.textContent = "🔊 ▁▃";
+      } else if (volumeLevel === 3) {
+        volumeBtn.textContent = "🔊 ▁▃▆";
+      } else if (volumeLevel === 4) {
+        volumeBtn.textContent = "🔊 ▁▃▆█";
+      }
     }
   </script>
 </body>
