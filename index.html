@@ -13,8 +13,8 @@
 
     /* Zarf açıldıktan sonraki özel görünüm */
     body.opened {
-      background: linear-gradient(135deg, #d8c7ff, #f3e7ff, #d1f3ff);
-      animation: dreamy 8s infinite alternate;
+      background: linear-gradient(135deg, #d8c7ff, #f3e7ff, #d1f3ff) !important;
+      animation: dreamy 8s infinite alternate !important;
     }
 
     @keyframes dreamy {
@@ -74,14 +74,13 @@
     /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
-      bottom: 100px; /* daha yukarı alındı */
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.95);
       padding: 15px 25px;
       border-radius: 15px;
       box-shadow: 0 0 12px rgba(0,0,0,0.25);
-      display: flex;
       align-items: center;
       gap: 16px;
       font-size: 16px;
@@ -89,7 +88,7 @@
       z-index: 9999;
     }
     
- .music-player button {
+    .music-player button {
       border: none;
       padding: 12px 16px;
       border-radius: 8px;
@@ -163,7 +162,7 @@
     <button onclick="prevSong()">⏮️</button>
     <button onclick="togglePlay()">⏯️</button>
     <button onclick="nextSong()">⏭️</button>
-    <button id="volumeBtn" onclick="cycleVolume()">🔊 ▁</button>
+    <button id="volumeBtn" onclick="cycleVolume()">🔊 ▁▃▆</button>
   </div>
 
   <script>
@@ -179,15 +178,15 @@
     const noteBox = document.getElementById("note");
     const volumeBtn = document.getElementById("volumeBtn");
     let currentSong = 0;
-    let volumeLevel = 1;
+    let volumeLevel = 3; // orta ses
     let noteShown = false;
 
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
-    const message = "pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yete sahip oldun be yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verrsin umarım yani,uzun lafın kısası bana verdiğin ve kattığın herşey için teşekkür ederim yani doğum günün kutlu olsun nice bizli senelere inşallah  🎉🎂💖 16.06.2008";
+    const message = "pişt eşşek nabıyon... (uzun mesajın burada)";
 
     function startParty() {
-      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)"; // pembe degrade
+      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
       document.querySelector(".cake").style.display = "none";
       document.getElementById("envelope").style.display = "block";
       document.getElementById("player").style.display = "flex";
@@ -198,7 +197,7 @@
       if (noteShown) return;
       noteShown = true;
       noteBox.style.display = "block";
-      document.body.classList.add("opened"); // Arka planı değiştir
+      document.body.classList.add("opened"); 
       typeWriter(message, noteBox);
     }
 
@@ -216,7 +215,7 @@
       audio.src = songs[currentSong].url;
       songName.textContent = songs[currentSong].name;
       coverArt.src = songs[currentSong].cover;
-      audio.volume = volumeSteps[0];
+      audio.volume = volumeSteps[volumeLevel - 1]; 
       audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
     }
     function togglePlay() {
