@@ -57,6 +57,30 @@
       to { transform: translateY(0); opacity: 1; }
     }
 
+    /* Özel alıntı için renkli stil */
+    .special-quote {
+      background: linear-gradient(
+        45deg, 
+        #ff6b9d, #c44569, #f8b500, #ff6348, #ff4757, #5352ed, #ff6b9d
+      );
+      background-size: 400% 400%;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow-shimmer 3s ease-in-out infinite;
+      font-weight: bold;
+      font-style: italic;
+      font-size: 1.2em;
+      text-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+      display: inline-block;
+      padding: 8px 0;
+    }
+    
+    @keyframes rainbow-shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
     /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
@@ -153,145 +177,120 @@
   </div>
 
   <script>
-  const songs = [
-    {name: "yezdacukk", url: "muzik1.mp3", cover:"cover1.png"},
-    {name: "Doğum günü kızı", url: "muzik2.mp3", cover:"cover2.jpg"},
-    {name: "Kenan Doğulu - Baş Harfi Ben", url: "muzik3.mp3", cover:"cover1.png"}
-  ];
+    const songs = [
+      {name: "yezdacukk", url: "muzik1.mp3", cover:"cover1.png"},
+      {name: "Doğum günü kızı", url: "muzik2.mp3", cover:"cover2.jpg"},
+      {name: "Kenan Doğulu - Baş Harfi Ben", url: "muzik3.mp3", cover:"cover1.png"}
+    ];
 
-  const messages = [
-    `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.<br><br>Pişt eşşek, nabıyon? Nasılsın, hayatın nasıl gidiyor?`,
-    
-    `Biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünebilecek kadar da zarifimdir. Tanışalı yaklaşık 2 yıl oldu, belki de geçti; fakat hem kalbimde hem de yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım, ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi.`,
+    const audio = document.getElementById("bgMusic");
+    const songName = document.getElementById("songName");
+    const coverArt = document.getElementById("coverArt");
+    const noteBox = document.getElementById("note");
+    const volumeBtn = document.getElementById("volumeBtn");
+    let currentSong = 0;
+    let volumeLevel = 1;
+    let noteShown = false;
 
-    `Yani benim tanıdığım Yezda, bana tanıttığın Yezda çok ayrı bir yerlerde, bunu bilmeni isterim. İnşallah artık sende beni düşünür, arada aklına gelirim; belki hatırlarsan bir değer verirsin, umarım.`,
+    const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
-    `Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.<br><br>
-    Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. Bazen gülümsüyorum, çünkü seni anmak bile güzel.`,
+    const message = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.\n
+Pişt eşşek, nabıyon? Nasılsın, hayatın nasıl gidiyor? Biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünebilecek kadar da zarifimdir. Tanışalı yaklaşık 2 yıl oldu, belki de geçti; fakat hem kalbimde hem de yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım, ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi. Yani benim tanıdığım Yezda, bana tanıttığın Yezda çok ayrı bir yerlerde, bunu bilmeni isterim. İnşallah artık sende beni düşünür, arada aklına gelirim; belki hatırlarsan bir değer verirsin, umarım.\n
+Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.\n
+Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. Bazen gülümsüyorum, çünkü seni anmak bile güzel.\n
+Ve sonunda, içimden sadece şu sözler dökülüyor: 
+<span class="special-quote">"Yalnız seni sevmişim, yalnız seni anladım.<br>Başkaları anlamadı seni, ben de onları anlamadım."</span>\n
+Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.\n
+Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
-    `Ve sonunda, içimden sadece şu sözler dökülüyor:<br>
-    <span style="color:#ff80ab; font-style:italic;">“Yalnız seni sevmişim, yalnız seni anladım.<br>Başkaları anlamadı seni, ben de onları anlamadım.”</span>`,
 
-    `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.<br><br>
-    <strong style="color:#ff4081;">Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖</strong><br><br>16.06.2008`
-  ];
 
-  const audio = document.getElementById("bgMusic");
-  const songName = document.getElementById("songName");
-  const coverArt = document.getElementById("coverArt");
-  const noteBox = document.getElementById("note");
-  const volumeBtn = document.getElementById("volumeBtn");
-  const envelope = document.getElementById("envelope");
+    function startParty() {
+      document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
+      document.querySelector(".cake").style.display = "none";
+      document.getElementById("envelope").style.display = "block";
+      document.getElementById("player").style.display = "flex";
+      playSong();
+    }
 
-  let currentSong = 0;
-  let volumeLevel = 1;
-  let currentMessageIndex = 0;
-  let writing = false;
-
-  const volumeSteps = [0.2, 0.4, 0.7, 1.0];
-
-  function startParty() {
-    document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
-    document.querySelector(".cake").style.display = "none";
-    envelope.style.display = "block";
-    document.getElementById("player").style.display = "flex";
-    playSong();
-  }
-
-  envelope.addEventListener("click", () => {
-    if (writing) return;
-    if (currentMessageIndex < messages.length) {
+    function showNote() {
+      if (noteShown) return;
+      noteShown = true;
       noteBox.style.display = "block";
-      writing = true;
-      typeWriter(messages[currentMessageIndex], noteBox, () => {
-        writing = false;
-        currentMessageIndex++;
-        if (currentMessageIndex >= messages.length) {
-          envelope.style.display = "none";
-        }
-      });
+      typeWriter(message, noteBox);
     }
-  });
 
-  function typeWriter(text, element, callback, speed = 20) {
-    element.innerHTML = "";
-    let i = 0;
-    let tag = "";
-    let inTag = false;
+    function typeWriter(text, element, speed = 20) {
+      element.innerHTML = "";
+      let i = 0;
+      let tag = "";
+      let inTag = false;
 
-    const interval = setInterval(() => {
-      if (i >= text.length) {
-        clearInterval(interval);
-        if (callback) callback();
-        return;
-      }
-
-      const char = text.charAt(i);
-
-      if (char === "<") inTag = true;
-
-      if (inTag) {
-        tag += char;
-        if (char === ">") {
-          inTag = false;
-          element.innerHTML += tag;
-          tag = "";
+      const interval = setInterval(() => {
+        if (i >= text.length) {
+          clearInterval(interval);
+          return;
         }
-      } else {
-        if (char === "\n") {
-          element.innerHTML += "<br>";
+
+        const char = text.charAt(i);
+
+        if (char === "<") inTag = true;
+        
+        if (inTag) {
+          tag += char;
+          if (char === ">") {
+            inTag = false;
+            element.innerHTML += tag;
+            tag = "";
+          }
         } else {
-          element.innerHTML += char;
+          if (char === "\n") {
+            element.innerHTML += "<br>";
+          } else {
+            element.innerHTML += char;
+          }
         }
-      }
 
-      i++;
-    }, speed);
-  }
-
-  function playSong() {
-    audio.src = songs[currentSong].url;
-    songName.textContent = songs[currentSong].name;
-    coverArt.src = songs[currentSong].cover;
-    audio.volume = volumeSteps[0];
-    audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
-  }
-
-  function togglePlay() {
-    if (audio.paused) { audio.play(); } else { audio.pause(); }
-  }
-
-  function nextSong() {
-    currentSong = (currentSong + 1) % songs.length;
-    playSong();
-  }
-
-  function prevSong() {
-    currentSong = (currentSong - 1 + songs.length) % songs.length;
-    playSong();
-  }
-
-  function cycleVolume() {
-    volumeLevel++;
-    if (volumeLevel > 4) volumeLevel = 1;
-    audio.volume = volumeSteps[volumeLevel - 1];
-    if (volumeLevel === 1) {
-      volumeBtn.textContent = "🔊 ▁";
-    } else if (volumeLevel === 2) {
-      volumeBtn.textContent = "🔊 ▁▃";
-    } else if (volumeLevel === 3) {
-      volumeBtn.textContent = "🔊 ▁▃▆";
-    } else if (volumeLevel === 4) {
-      volumeBtn.textContent = "🔊 ▁▃▆█";
+        i++;
+      }, speed);
     }
-  }
-</script>
 
+    function playSong() {
+      audio.src = songs[currentSong].url;
+      songName.textContent = songs[currentSong].name;
+      coverArt.src = songs[currentSong].cover;
+      audio.volume = volumeSteps[0];
+      audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
+    }
+
+    function togglePlay() {
+      if (audio.paused) { audio.play(); } else { audio.pause(); }
+    }
+
+    function nextSong() {
+      currentSong = (currentSong + 1) % songs.length;
+      playSong();
+    }
+
+    function prevSong() {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      playSong();
+    }
+
+    function cycleVolume() {
+      volumeLevel++;
+      if (volumeLevel > 4) volumeLevel = 1;
+      audio.volume = volumeSteps[volumeLevel - 1];
+      if (volumeLevel === 1) {
+        volumeBtn.textContent = "🔊 ▁";
+      } else if (volumeLevel === 2) {
+        volumeBtn.textContent = "🔊 ▁▃";
+      } else if (volumeLevel === 3) {
+        volumeBtn.textContent = "🔊 ▁▃▆";
+      } else if (volumeLevel === 4) {
+        volumeBtn.textContent = "🔊 ▁▃▆█";
+      }
+    }
+  </script>
 </body>
 </html>
-
-
-
-
-
-
