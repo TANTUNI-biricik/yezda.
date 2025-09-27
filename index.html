@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
@@ -7,8 +8,9 @@
       text-align: center;
       background: #fff5f7;
       font-family: Arial, sans-serif;
-      overflow: hidden;
       transition: background 1s;
+      padding-bottom: 160px; /* müzik çalar için boşluk */
+      overflow-y: auto; /* uzun mesajlarda scroll */
     }
     .cake {
       font-size: 120px;
@@ -47,6 +49,8 @@
       text-align: left;
       line-height: 1.5;
       animation: slideUp 1s forwards;
+      max-height: calc(100vh - 200px); /* taşmayı önle */
+      overflow-y: auto; /* uzun metin scroll */
     }
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
@@ -56,7 +60,7 @@
     /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
-      bottom: 100px; /* daha yukarı alındı */
+      bottom: 20px; /* daha aşağıya alındı */
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.95);
@@ -71,7 +75,7 @@
       z-index: 9999;
     }
     
- .music-player button {
+    .music-player button {
       border: none;
       padding: 12px 16px;
       border-radius: 8px;
@@ -167,25 +171,25 @@
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
     const message = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. 
-    Sen de öylesin. 
-    
-    pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim
-    ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu
-    belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun ve 
-    ne yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi
-    yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim
-    inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verirsin umarım
-    
-    Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor. 
-    Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. 
-    Bazen gülümsüyorum, çünkü seni anmak bile güzel. 
-    Ve sonunda, içimden sadece şu sözler dökülüyor: 
-    <span style="color:#ff80ab; font-style:italic;">
-    “Yalnız seni sevmişim, yalnız seni anladım.<br>
-    Başkaları anlamadı seni, ben de onları anlamadım.”
-    </span><br><br>
-    Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim. 
-    Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
+Sen de öylesin. 
+
+pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim
+ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu
+belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun ve 
+ne yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi
+yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim
+inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verirsin umarım
+
+Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor. 
+Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. 
+Bazen gülümsüyorum, çünkü seni anmak bile güzel. 
+Ve sonunda, içimden sadece şu sözler dökülüyor: 
+<span style="color:#ff80ab; font-style:italic;">
+“Yalnız seni sevmişim, yalnız seni anladım.<br>
+Başkaları anlamadı seni, ben de onları anlamadım.”
+</span><br><br>
+Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim. 
+Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
     function startParty() {
       document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
@@ -205,8 +209,20 @@
     function typeWriter(text, element) {
       element.innerHTML = "";
       let i = 0;
+      let tag = "";
+      let inTag = false;
+
       const interval = setInterval(() => {
-        element.innerHTML += text.charAt(i);
+        const char = text.charAt(i);
+        if (char === "<") inTag = true;
+        if (inTag) tag += char;
+        else element.innerHTML += char;
+
+        if (char === ">") {
+          inTag = false;
+          element.innerHTML += tag;
+          tag = "";
+        }
         i++;
         if (i >= text.length) clearInterval(interval);
       }, 50);
@@ -248,7 +264,3 @@
   </script>
 </body>
 </html>
-
-
-
-
