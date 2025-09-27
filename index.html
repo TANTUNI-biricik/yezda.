@@ -154,9 +154,9 @@
 
   <script>
     const songs = [
-      {name: "yezdacukk ", url: "muzik1.mp3", cover:"cover1.png"},
-      {name: "Doğum günü kızı ", url: "muzik2.mp3", cover:"cover2.jpg"},
-      {name: "Kenan Doğulu - Baş Harfi Ben ", url: "muzik3.mp3", cover:"cover1.png"}
+      {name: "yezdacukk", url: "muzik1.mp3", cover:"cover1.png"},
+      {name: "Doğum günü kızı", url: "muzik2.mp3", cover:"cover2.jpg"},
+      {name: "Kenan Doğulu - Baş Harfi Ben", url: "muzik3.mp3", cover:"cover1.png"}
     ];
 
     const audio = document.getElementById("bgMusic");
@@ -170,25 +170,14 @@
 
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
-    const message = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. 
-Sen de öylesin. 
-
-pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim
-ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu
-belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun ve 
-ne yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi
-yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim
-inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verirsin umarım
-
-Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor. 
-Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. 
-Bazen gülümsüyorum, çünkü seni anmak bile güzel. 
-Ve sonunda, içimden sadece şu sözler dökülüyor: 
-<span style="color:#ff80ab; font-style:italic;">
-“Yalnız seni sevmişim, yalnız seni anladım.<br>
-Başkaları anlamadı seni, ben de onları anlamadım.”
-</span><br><br>
-Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim. 
+    const message = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.\n
+pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verirsin umarım\n
+Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.\n
+Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor.\n
+Bazen gülümsüyorum, çünkü seni anmak bile güzel.\n
+Ve sonunda, içimden sadece şu sözler dökülüyor: \n
+<span style="color:#ff80ab; font-style:italic;">“Yalnız seni sevmişim, yalnız seni anladım.<br>Başkaları anlamadı seni, ben de onları anlamadım.”</span>\n
+Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.\n
 Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
     function startParty() {
@@ -206,26 +195,39 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
       typeWriter(message, noteBox);
     }
 
-    function typeWriter(text, element) {
+    function typeWriter(text, element, speed = 20) {
       element.innerHTML = "";
       let i = 0;
       let tag = "";
       let inTag = false;
 
       const interval = setInterval(() => {
-        const char = text.charAt(i);
-        if (char === "<") inTag = true;
-        if (inTag) tag += char;
-        else element.innerHTML += char;
-
-        if (char === ">") {
-          inTag = false;
-          element.innerHTML += tag;
-          tag = "";
+        if (i >= text.length) {
+          clearInterval(interval);
+          return;
         }
+
+        const char = text.charAt(i);
+
+        if (char === "<") inTag = true;
+        
+        if (inTag) {
+          tag += char;
+          if (char === ">") {
+            inTag = false;
+            element.innerHTML += tag;
+            tag = "";
+          }
+        } else {
+          if (char === "\n") {
+            element.innerHTML += "<br>";
+          } else {
+            element.innerHTML += char;
+          }
+        }
+
         i++;
-        if (i >= text.length) clearInterval(interval);
-      }, 50);
+      }, speed);
     }
 
     function playSong() {
@@ -235,13 +237,16 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
       audio.volume = volumeSteps[0];
       audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
     }
+
     function togglePlay() {
       if (audio.paused) { audio.play(); } else { audio.pause(); }
     }
+
     function nextSong() {
       currentSong = (currentSong + 1) % songs.length;
       playSong();
     }
+
     function prevSong() {
       currentSong = (currentSong - 1 + songs.length) % songs.length;
       playSong();
