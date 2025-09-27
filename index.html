@@ -1,117 +1,182 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>Doğum Günün Kutlu Olsun!</title>
-<style>
-  body {
-    text-align: center;
-    background: #fff5f7;
-    font-family: Arial, sans-serif;
-    transition: background 1s;
-    padding-bottom: 160px;
-    overflow-y: auto;
-  }
-  .note {
-    display: none;
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 600px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
-    font-size: 18px;
-    text-align: left;
-    line-height: 1.5;
-    animation: slideUp 1s forwards;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-  }
-  @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  <meta charset="UTF-8">
+  <title>Doğum Günün Kutlu Olsun!</title>
+  <style>
+    body {
+      text-align: center;
+      background: #fff5f7;
+      font-family: Arial, sans-serif;
+      transition: background 1s;
+      padding-bottom: 160px; /* müzik çalar için boşluk */
+      overflow-y: auto; /* uzun mesajlarda scroll */
+    }
+    .cake {
+      font-size: 120px;
+      margin-top: 150px;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);} }
 
-  /* Gradient renkli animasyon */
-  .highlight { 
-    font-style: italic; 
-    background: linear-gradient(90deg, #ff80ab, #ffea00, #40c4ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 200% auto;
-    animation: gradientMove 3s linear infinite;
-    display: inline-block;
-    white-space: pre-wrap;
-  }
-  @keyframes gradientMove {
-    0% { background-position: 0% } 
-    100% { background-position: 200% } 
-  }
-</style>
+    .envelope {
+      font-size: 100px;
+      cursor: pointer;
+      display: none;
+      margin-top: 50px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateY(0);}50%{transform:translateY(-15px);} }
+
+    .note {
+      display: none;
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 500px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      font-size: 18px;
+      text-align: left;
+      line-height: 1.5;
+      animation: slideUp 1s forwards;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+    }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .music-player {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      padding: 15px 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 16px;
+      display: none;
+      z-index: 9999;
+    }
+    .music-player button { border:none; padding:12px 16px; border-radius:8px; cursor:pointer; font-size:18px; transition:0.3s; background:#ff4081; color:white; }
+    .music-player button:hover { background:#e73370; }
+    .music-info { display:flex; align-items:center; gap:12px; min-width:180px; }
+    .music-info img { width:55px; height:55px; border-radius:8px; }
+    .music-info span { font-weight:bold; color:#333; font-size:16px; }
+
+    /* Gradient renkli animasyon */
+    .highlight { 
+      font-style: italic; 
+      background: linear-gradient(90deg,#ff80ab,#ffea00,#40c4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradientMove 3s linear infinite;
+      display: inline-block;
+      white-space: pre-wrap;
+    }
+    @keyframes gradientMove { 0%{background-position:0%}100%{background-position:200%} }
+
+    @media (max-width:600px){
+      .music-player{bottom:40px;padding:12px 18px;gap:12px;font-size:14px;}
+      .music-player button{padding:10px 14px;font-size:16px;}
+      .music-info img{width:45px;height:45px;}
+      .music-info span{font-size:14px;}
+    }
+  </style>
 </head>
 <body>
+  <div class="cake" onclick="startParty()">🎂</div>
+  <div class="envelope" id="envelope" onclick="showNote()">✉️</div>
+  <div class="note" id="note"></div>
 
-<div class="note" id="note">
-  <p id="messageText"></p>
-  <span class="highlight" id="highlightText"></span>
-  <p id="messageText2"></p>
-</div>
+  <audio id="bgMusic" loop></audio>
 
-<script>
-const noteBox = document.getElementById("note");
-const messageText = document.getElementById("messageText");
-const highlightText = document.getElementById("highlightText");
-const messageText2 = document.getElementById("messageText2");
+  <div class="music-player" id="player">
+    <div class="music-info">
+      <img id="coverArt" src="" alt="Kapak">
+      <span id="songName">Şarkı yükleniyor...</span>
+    </div>
+    <button onclick="prevSong()">⏮️</button>
+    <button onclick="togglePlay()">⏯️</button>
+    <button onclick="nextSong()">⏭️</button>
+    <button id="volumeBtn" onclick="cycleVolume()">🔊 ▁</button>
+  </div>
 
-const message1 = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.
+  <script>
+    const songs = [
+      {name:"yezdacukk",url:"muzik1.mp3",cover:"cover1.png"},
+      {name:"Doğum günü kızı",url:"muzik2.mp3",cover:"cover2.jpg"},
+      {name:"Kenan Doğulu - Baş Harfi Ben",url:"muzik3.mp3",cover:"cover1.png"}
+    ];
+
+    const audio=document.getElementById("bgMusic");
+    const songName=document.getElementById("songName");
+    const coverArt=document.getElementById("coverArt");
+    const noteBox=document.getElementById("note");
+    const volumeBtn=document.getElementById("volumeBtn");
+    let currentSong=0,volumeLevel=1,noteShown=false;
+    const volumeSteps=[0.2,0.4,0.7,1.0];
+
+    const message1=`Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.
 Pişt eşşek, nabıyon? Nasılsın, hayatın nasıl gidiyor? Biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünebilecek kadar da zarifimdir. Tanışalı yaklaşık 2 yıl oldu, belki de geçti; fakat hem kalbimde hem de yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım, ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi. Yani benim tanıdığım Yezda, bana tanıttığın Yezda çok ayrı bir yerlerde, bunu bilmeni isterim. İnşallah artık sende beni düşünür, arada aklına gelirim; belki hatırlarsan bir değer verirsin, umarım.
 Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.
 Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. Bazen gülümsüyorum, çünkü seni anmak bile güzel.
 Ve sonunda, içimden sadece şu sözler dökülüyor:`;
 
-const highlightMessage = `“Yalnız seni sevmişim, yalnız seni anladım.
+    const highlightMessage=`“Yalnız seni sevmişim, yalnız seni anladım.
 Başkaları anlamadı seni, ben de onları anlamadım.”`;
 
-const message2 = `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.
+    const message2=`Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.
 Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
-// Notu göster
-noteBox.style.display = "block";
-
-// Normal metin -> renkli animasyon -> normal metin
-typeWriter(message1, messageText, 20, () => {
-  typeWriterAnimated(highlightMessage, highlightText, 50, () => {
-    typeWriter(message2, messageText2, 20);
-  });
-});
-
-function typeWriter(text, element, speed = 20, callback) {
-  element.innerHTML = "";
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i >= text.length) {
-      clearInterval(interval);
-      if (callback) callback();
-      return;
+    function startParty(){
+      document.body.style.background="linear-gradient(to right,#ffdde1,#ee9ca7)";
+      document.querySelector(".cake").style.display="none";
+      document.getElementById("envelope").style.display="block";
+      document.getElementById("player").style.display="flex";
+      playSong();
     }
-    const char = text.charAt(i);
-    element.innerHTML += (char === "\n" ? "<br>" : char);
-    i++;
-  }, speed);
-}
 
-function typeWriterAnimated(text, element, speed = 50, callback) {
-  element.innerHTML = "";
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i >= text.length) {
-      clearInterval(interval);
-      if (callback) callback();
-      return;
+    function showNote(){
+      if(noteShown) return;
+      noteShown=true;
+      noteBox.style.display="block";
+      typeWriter(message1,noteBox,20,()=>{typeWriterAnimated(highlightMessage,noteBox,50,()=>{typeWriter(message2,noteBox,20);});});
     }
-    const char = text.charAt(i);
-    element.innerHTML += (char === "\n" ? "<br>" : char);
-    i++;
-  }, speed);
-}
-</script>
 
-</body>
-</html>
+    function typeWriter(text,element,speed=20,callback){
+      element.innerHTML="";
+      let i=0,tag="",inTag=false;
+      const interval=setInterval(()=>{
+        if(i>=text.length){clearInterval(interval);if(callback)callback();return;}
+        const char=text.charAt(i);
+        if(char=="<") inTag=true;
+        if(inTag){tag+=char;if(char==">"){inTag=false;element.innerHTML+=tag;tag="";}} 
+        else {element.innerHTML+=char=="\n"? "<br>":char;}
+        i++;
+      },speed);
+    }
+
+    function typeWriterAnimated(text,element,speed=50,callback){
+      let i=0;
+      const span=document.createElement("span");
+      span.className="highlight";
+      element.appendChild(span);
+      const interval=setInterval(()=>{
+        if(i>=text.length){clearInterval(interval);if(callback)callback();return;}
+        const char=text.charAt(i);
+        span.innerHTML+=char=="\n"? "<br>":char;
+        i++;
+      },speed);
+    }
+
+    function playSong(){audio.src=songs[currentSong].url;songName.textContent=songs[currentSong].name;coverArt.src=songs[currentSong].cover;audio.volume=volumeSteps[0];audio.play().catch(e=>{console.log("Müzik engellendi:",e)});}
+    function togglePlay(){audio.paused?audio.play():audio.pause();}
+    function nextSong(){currentSong=(currentSong+1)%songs.length;playSong();}
+    function prevSong(){currentSong=(currentSong-1+songs.length)%songs.length;playSong();}
+    function cycleVolume(){volumeLevel++;if(volumeLevel>4)volumeLevel=1;audio
