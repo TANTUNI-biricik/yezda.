@@ -9,8 +9,8 @@
       background: #fff5f7;
       font-family: Arial, sans-serif;
       transition: background 1s;
-      padding-bottom: 160px; /* müzik çalar için boşluk */
-      overflow-y: auto; /* uzun mesajlarda scroll */
+      padding-bottom: 160px;
+      overflow-y: auto;
     }
     .cake {
       font-size: 120px;
@@ -18,12 +18,8 @@
       cursor: pointer;
       animation: float 3s ease-in-out infinite;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-    /* Zarf */
     .envelope {
       font-size: 100px;
       cursor: pointer;
@@ -31,12 +27,8 @@
       margin-top: 50px;
       animation: bounce 2s infinite;
     }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-    /* Mesaj Kutusu */
     .note {
       display: none;
       margin: 20px auto;
@@ -49,18 +41,14 @@
       text-align: left;
       line-height: 1.5;
       animation: slideUp 1s forwards;
-      max-height: calc(100vh - 200px); /* taşmayı önle */
-      overflow-y: auto; /* uzun metin scroll */
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
     }
-    @keyframes slideUp {
-      from { transform: translateY(100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+    @keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-    /* 🎶 Müzik Çalar */
     .music-player {
       position: fixed;
-      bottom: 20px; /* daha aşağıya alındı */
+      bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(255, 255, 255, 0.95);
@@ -74,82 +62,47 @@
       display: none;
       z-index: 9999;
     }
-    
-    .music-player button {
-      border: none;
-      padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: 0.3s;
-      background: #ff4081;
-      color: white;
-    }
-    .music-player button:hover {
-      background: #e73370;
-    }
-    .music-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 180px;
-    }
-    .music-info img {
-      width: 55px;
-      height: 55px;
-      border-radius: 8px;
-    }
-    .music-info span {
-      font-weight: bold;
-      color: #333;
-      font-size: 16px;
-    }
+    .music-player button { border: none; padding: 12px 16px; border-radius: 8px; cursor: pointer; font-size: 18px; transition: 0.3s; background: #ff4081; color: white; }
+    .music-player button:hover { background: #e73370; }
+    .music-info { display: flex; align-items: center; gap: 12px; min-width: 180px; }
+    .music-info img { width: 55px; height: 55px; border-radius: 8px; }
+    .music-info span { font-weight: bold; color: #333; font-size: 16px; }
 
+    /* Gradient renkli animasyon */
     .highlight { 
-      color: #ff80ab; 
       font-style: italic; 
+      background: linear-gradient(90deg, #ff80ab, #ffea00, #40c4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradientMove 3s linear infinite;
+      display: inline-block;
+      white-space: pre-wrap;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% } 
+      100% { background-position: 200% } 
     }
 
-    /* 📱 Telefon uyumluluğu */
     @media (max-width: 600px) {
-      .music-player {
-        bottom: 40px;
-        padding: 12px 18px;
-        gap: 12px;
-        font-size: 14px;
-      }
-      .music-player button {
-        padding: 10px 14px;
-        font-size: 16px;
-      }
-      .music-info img {
-        width: 45px;
-        height: 45px;
-      }
-      .music-info span {
-        font-size: 14px;
-      }
+      .music-player { bottom: 40px; padding: 12px 18px; gap: 12px; font-size: 14px; }
+      .music-player button { padding: 10px 14px; font-size: 16px; }
+      .music-info img { width: 45px; height: 45px; }
+      .music-info span { font-size: 14px; }
     }
   </style>
 </head>
 <body>
-  <!-- İlk sadece pasta -->
   <div class="cake" onclick="startParty()">🎂</div>
-
-  <!-- Zarf -->
   <div class="envelope" id="envelope" onclick="showNote()">✉️</div>
-
-  <!-- Mesaj -->
   <div class="note" id="note">
     <p id="messageText"></p>
-    <p class="highlight">“Yalnız seni sevmişim, yalnız seni anladım.<br>Başkaları anlamadı seni, ben de onları anlamadım.”</p>
+    <span class="highlight" id="highlightText"></span>
     <p id="messageText2"></p>
   </div>
 
-  <!-- Müzik -->
   <audio id="bgMusic" loop></audio>
 
-  <!-- Müzik Çalar -->
   <div class="music-player" id="player">
     <div class="music-info">
       <img id="coverArt" src="" alt="Kapak">
@@ -175,17 +128,18 @@
     const volumeBtn = document.getElementById("volumeBtn");
     const messageText = document.getElementById("messageText");
     const messageText2 = document.getElementById("messageText2");
+    const highlightText = document.getElementById("highlightText");
 
     let currentSong = 0;
     let volumeLevel = 1;
     let noteShown = false;
     const volumeSteps = [0.2, 0.4, 0.7, 1.0];
 
-    const message1 = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.\n
-pişt eşşek nabıyon nasılsın hayatın nasıl gidiyor biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünülebilcek kadar da zarifimdir tanışalı yaklaşık 2 yıl oldu belkide geçti fakat hem kalbimde hemde yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi yani benim tanıdıgım yezda bana tanıttıgın yezda çok ayrı bir yerlerde bunu bilmeni isterim inşallah artık sende beni düşünür arada aklına gelirim belki hatırlarsan bir değer verirsin umarım\n
-Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.\nBazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor.Bazen gülümsüyorum, çünkü seni anmak bile güzel.\n Ve sonunda, içimden sadece şu sözler dökülüyor:`;
+    const message1 = `Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor. Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor.Bazen gülümsüyorum, çünkü seni anmak bile güzel. Ve sonunda, içimden sadece şu sözler dökülüyor:`;
 
-    const message2 = `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.\n Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
+    const highlightMessage = `“Yalnız seni sevmişim, yalnız seni anladım. Başkaları anlamadı seni, ben de onları anlamadım.”`;
+
+    const message2 = `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim. Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
     function startParty() {
       document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
@@ -199,8 +153,11 @@ Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım g�
       if (noteShown) return;
       noteShown = true;
       noteBox.style.display = "block";
+
       typeWriter(message1, messageText, 20, () => {
-        typeWriter(message2, messageText2, 20);
+        typeWriterAnimated(highlightMessage, highlightText, 50, () => {
+          typeWriter(message2, messageText2, 20);
+        });
       });
     }
 
@@ -214,8 +171,22 @@ Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım g�
           return;
         }
         const char = text.charAt(i);
-        if (char === "\n") element.innerHTML += "<br>";
-        else element.innerHTML += char;
+        element.innerHTML += (char === "\n" ? "<br>" : char);
+        i++;
+      }, speed);
+    }
+
+    function typeWriterAnimated(text, element, speed = 50, callback) {
+      element.innerHTML = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (callback) callback();
+          return;
+        }
+        const char = text.charAt(i);
+        element.innerHTML += (char === "\n" ? "<br>" : char);
         i++;
       }, speed);
     }
@@ -228,28 +199,14 @@ Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım g�
       audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
     }
 
-    function togglePlay() {
-      if (audio.paused) { audio.play(); } else { audio.pause(); }
-    }
-
-    function nextSong() {
-      currentSong = (currentSong + 1) % songs.length;
-      playSong();
-    }
-
-    function prevSong() {
-      currentSong = (currentSong - 1 + songs.length) % songs.length;
-      playSong();
-    }
-
+    function togglePlay() { audio.paused ? audio.play() : audio.pause(); }
+    function nextSong() { currentSong = (currentSong + 1) % songs.length; playSong(); }
+    function prevSong() { currentSong = (currentSong - 1 + songs.length) % songs.length; playSong(); }
     function cycleVolume() {
       volumeLevel++;
       if (volumeLevel > 4) volumeLevel = 1;
       audio.volume = volumeSteps[volumeLevel - 1];
-      if (volumeLevel === 1) volumeBtn.textContent = "🔊 ▁";
-      else if (volumeLevel === 2) volumeBtn.textContent = "🔊 ▁▃";
-      else if (volumeLevel === 3) volumeBtn.textContent = "🔊 ▁▃▆";
-      else if (volumeLevel === 4) volumeBtn.textContent = "🔊 ▁▃▆█";
+      volumeBtn.textContent = ["🔊 ▁","🔊 ▁▃","🔊 ▁▃▆","🔊 ▁▃▆█"][volumeLevel-1];
     }
   </script>
 </body>
