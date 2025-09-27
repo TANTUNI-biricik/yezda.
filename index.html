@@ -12,28 +12,11 @@
       padding-bottom: 160px; /* müzik çalar için boşluk */
       overflow-y: auto; /* uzun mesajlarda scroll */
     }
-    .cake {
-      font-size: 120px;
-      margin-top: 150px;
-      cursor: pointer;
-      animation: float 3s ease-in-out infinite;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
+    .cake { font-size: 120px; margin-top: 150px; cursor: pointer; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }
 
-    .envelope {
-      font-size: 100px;
-      cursor: pointer;
-      display: none;
-      margin-top: 50px;
-      animation: bounce 2s infinite;
-    }
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
+    .envelope { font-size: 100px; cursor: pointer; display: none; margin-top: 50px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
 
     .note {
       display: none;
@@ -50,10 +33,7 @@
       max-height: calc(100vh - 200px);
       overflow-y: auto;
     }
-    @keyframes slideUp {
-      from { transform: translateY(100%); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+    @keyframes slideUp { from{transform:translateY(100%);opacity:0;} to{transform:translateY(0);opacity:1;} }
 
     .music-player {
       position: fixed;
@@ -71,35 +51,17 @@
       display: none;
       z-index: 9999;
     }
-    
-    .music-player button {
-      border: none;
-      padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: 0.3s;
-      background: #ff4081;
-      color: white;
-    }
-    .music-player button:hover { background: #e73370; }
+    .music-player button { border:none; padding:12px 16px; border-radius:8px; cursor:pointer; font-size:18px; transition:0.3s; background:#ff4081; color:white; }
+    .music-player button:hover { background:#e73370; }
+    .music-info { display:flex; align-items:center; gap:12px; min-width:180px; }
+    .music-info img { width:55px; height:55px; border-radius:8px; }
+    .music-info span { font-weight:bold; color:#333; font-size:16px; }
 
-    .music-info { display: flex; align-items: center; gap: 12px; min-width: 180px; }
-    .music-info img { width: 55px; height: 55px; border-radius: 8px; }
-    .music-info span { font-weight: bold; color: #333; font-size: 16px; }
-
-    .highlight { 
-      color:#ff80ab; 
-      font-style: italic; 
-    }
-
-    @media (max-width: 600px) {
-      .music-player {
-        bottom: 40px; padding: 12px 18px; gap: 12px; font-size: 14px;
-      }
-      .music-player button { padding: 10px 14px; font-size: 16px; }
-      .music-info img { width: 45px; height: 45px; }
-      .music-info span { font-size: 14px; }
+    @media (max-width:600px){
+      .music-player{bottom:40px; padding:12px 18px; gap:12px; font-size:14px;}
+      .music-player button{padding:10px 14px; font-size:16px;}
+      .music-info img{width:45px;height:45px;}
+      .music-info span{font-size:14px;}
     }
   </style>
 </head>
@@ -134,19 +96,17 @@
     let currentSong = 0;
     let volumeLevel = 1;
     let noteShown = false;
-    const volumeSteps = [0.2, 0.4, 0.7, 1.0];
+    const volumeSteps = [0.2,0.4,0.7,1.0];
 
-    const message1 = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.
-Pişt eşşek, nabıyon? Nasılsın, hayatın nasıl gidiyor? Biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünebilecek kadar da zarifimdir. Tanışalı yaklaşık 2 yıl oldu, belki de geçti; fakat hem kalbimde hem de yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım, ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi. Yani benim tanıdığım Yezda, bana tanıttığın Yezda çok ayrı bir yerlerde, bunu bilmeni isterim. İnşallah artık sende beni düşünür, arada aklına gelirim; belki hatırlarsan bir değer verirsin, umarım.
-Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.
-Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. Bazen gülümsüyorum, çünkü seni anmak bile güzel.
-Ve sonunda, içimden sadece şu sözler dökülüyor:`;
+    const message1 = `Yezda, bazı insanlar olur, hayatına sessizce girer ama her şeyi değiştirir. Sen de öylesin.\n
+Pişt eşşek, nabıyon? Nasılsın, hayatın nasıl gidiyor? Biliyorum ben biraz kötü biriyim ama bazen de böyle şeyleri düşünebilecek kadar da zarifimdir. Tanışalı yaklaşık 2 yıl oldu, belki de geçti; fakat hem kalbimde hem de yüreğimde çok iyi bir yere sahip oldun ve ne yaparsam yapayım, ne sokarsam sokayım kalbime/yüreğime başaramıyorum ulan seni silmeyi. Yani benim tanıdığım Yezda, bana tanıttığın Yezda çok ayrı bir yerlerde, bunu bilmeni isterim. İnşallah artık sende beni düşünür, arada aklına gelirim; belki hatırlarsan bir değer verirsin, umarım.\n
+Bir sabahın huzuru, bir gülüşün sıcaklığı gibi... Seni tanıdığım günden beri zaman başka akıyor, dünya başka dönüyor.\n
+Bazen seni düşünürken susuyorum, çünkü kelimeler sana yetmiyor. Bazen gülümsüyorum, çünkü seni anmak bile güzel.\n
+Ve sonunda, içimden sadece şu sözler dökülüyor:\n`;
 
-    const highlightMessage = `“Yalnız seni sevmişim, yalnız seni anladım.
-Başkaları anlamadı seni, ben de onları anlamadım.”`;
+    const highlightMessage = `<span style="color:#ff80ab; font-style:italic;">“Yalnız seni sevmişim, yalnız seni anladım.<br>Başkaları anlamadı seni, ben de onları anlamadım.”</span>\n`;
 
-    const message2 = `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.
-Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
+    const message2 = `Uzun lafın kısası; bana verdiğin ve kattığın her şey için teşekkür ederim.\nYani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.06.2008`;
 
     function startParty() {
       document.body.style.background = "linear-gradient(to right, #ffdde1, #ee9ca7)";
@@ -157,9 +117,10 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
     }
 
     function showNote() {
-      if (noteShown) return;
+      if(noteShown) return;
       noteShown = true;
       noteBox.style.display = "block";
+
       typeWriter(message1, noteBox, 20, () => {
         typeWriterAnimated(highlightMessage, noteBox, 50, () => {
           typeWriter(message2, noteBox, 20);
@@ -168,27 +129,39 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
     }
 
     function typeWriter(text, element, speed = 20, callback) {
-      element.innerHTML = "";
       let i = 0;
-      const interval = setInterval(() => {
-        if (i >= text.length) { clearInterval(interval); if (callback) callback(); return; }
+      const interval = setInterval(()=>{
+        if(i>=text.length){clearInterval(interval); if(callback)callback(); return;}
         const char = text.charAt(i);
         element.innerHTML += char === "\n" ? "<br>" : char;
         i++;
       }, speed);
     }
 
-    function typeWriterAnimated(text, element, speed = 50, callback) {
+    function typeWriterAnimated(html, element, speed = 50, callback){
       let i = 0;
-      const span = document.createElement("span");
-      span.className = "highlight";
-      element.appendChild(span);
-      const interval = setInterval(() => {
-        if (i >= text.length) { clearInterval(interval); if (callback) callback(); return; }
-        const char = text.charAt(i);
-        span.innerHTML += char === "\n" ? "<br>" : char;
-        i++;
-      }, speed);
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      function addNode(node){
+        if(node.nodeType===3){ // text node
+          let j=0;
+          function addChar(){
+            if(j>=node.textContent.length){ 
+              if(callback)callback(); return;
+            }
+            element.appendChild(document.createTextNode(node.textContent[j]));
+            j++;
+            setTimeout(addChar,speed);
+          }
+          addChar();
+        } else if(node.nodeType===1){ // element node
+          const el = document.createElement(node.tagName);
+          for(const attr of node.attributes) el.setAttribute(attr.name, attr.value);
+          element.appendChild(el);
+          for(const child of node.childNodes) addNode(child);
+        }
+      }
+      for(const child of temp.childNodes) addNode(child);
     }
 
     function playSong() {
@@ -196,31 +169,18 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
       songName.textContent = songs[currentSong].name;
       coverArt.src = songs[currentSong].cover;
       audio.volume = volumeSteps[0];
-      audio.play().catch((e)=>{console.log("Müzik engellendi:", e)});
+      audio.play().catch(e=>console.log("Müzik engellendi:", e));
     }
 
-    function togglePlay() {
-      if (audio.paused) { audio.play(); } else { audio.pause(); }
-    }
+    function togglePlay(){ if(audio.paused){audio.play();}else{audio.pause();} }
+    function nextSong(){ currentSong=(currentSong+1)%songs.length; playSong(); }
+    function prevSong(){ currentSong=(currentSong-1+songs.length)%songs.length; playSong(); }
 
-    function nextSong() {
-      currentSong = (currentSong + 1) % songs.length;
-      playSong();
-    }
-
-    function prevSong() {
-      currentSong = (currentSong - 1 + songs.length) % songs.length;
-      playSong();
-    }
-
-    function cycleVolume() {
+    function cycleVolume(){
       volumeLevel++;
-      if (volumeLevel > 4) volumeLevel = 1;
-      audio.volume = volumeSteps[volumeLevel - 1];
-      if (volumeLevel === 1) volumeBtn.textContent = "🔊 ▁";
-      else if (volumeLevel === 2) volumeBtn.textContent = "🔊 ▁▃";
-      else if (volumeLevel === 3) volumeBtn.textContent = "🔊 ▁▃▆";
-      else if (volumeLevel === 4) volumeBtn.textContent = "🔊 ▁▃▆█";
+      if(volumeLevel>4)volumeLevel=1;
+      audio.volume = volumeSteps[volumeLevel-1];
+      volumeBtn.textContent = volumeLevel===1?"🔊 ▁":volumeLevel===2?"🔊 ▁▃":volumeLevel===3?"🔊 ▁▃▆":"🔊 ▁▃▆█";
     }
   </script>
 </body>
