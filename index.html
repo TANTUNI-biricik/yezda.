@@ -152,8 +152,91 @@
   </style>
 </head>
 <body>
-  <!-- İlk sadece pasta -->
-  <div class="cake" onclick="startParty()">🎂</div>
+  <!-- İlk sadece pasta --!>
+  <!-- 🎂 Animasyonlu Pasta -->
+<div class="cake" onclick="startParty()">
+  <div class="layer layer1"></div>
+  <div class="layer layer2"></div>
+  <div class="layer layer3"></div>
+  <div class="icing"></div>
+  <div class="candle">
+    <div class="flame"></div>
+  </div>
+</div>
+
+<style>
+  /* 🎂 Pasta Stili */
+  .cake {
+    position: relative;
+    width: 150px;
+    height: 120px;
+    margin: 150px auto 0;
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .layer {
+    height: 30px;
+    width: 100%;
+    background: #a0522d;
+    border-radius: 4px;
+  }
+
+  .layer1 { background: #d2691e; }
+  .layer2 { background: #a0522d; }
+  .layer3 { background: #8b4513; }
+
+  .icing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .candle {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    width: 10px;
+    height: 25px;
+    background: #ff4081;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    animation: bounce 2s infinite;
+  }
+
+  .flame {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    width: 6px;
+    height: 10px;
+    background: orange;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    animation: flicker 0.3s infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; transform: scale(1) translateX(-50%); }
+    50% { opacity: 0.6; transform: scale(1.2) translateX(-50%); }
+    100% { opacity: 1; transform: scale(1) translateX(-50%); }
+  }
+</style>
+
 
   <!-- Zarf -->
   <div class="envelope" id="envelope" onclick="showNote()">✉️</div>
@@ -294,5 +377,6 @@ Yani doğum günün kutlu olsun, nice bizli senelere inşallah 🎉🎂💖 16.0
   </script>
 </body>
 </html>
+
 
 
